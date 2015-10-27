@@ -9,15 +9,19 @@
 後者がプロビジョニングです。
 
 ブートされたシステムにソフトウェアをインストールすることは、プロビジョニングと呼ばれ、
-多くの場合は、シェルスクリプト、設定管理システム、あるいはコマンドラインを主導で使って行われます。
+多くの場合は、シェルスクリプト、設定管理システム、あるいはコマンドラインを主導で使って
+行われます。
 
 Vagrant は自動的なプロビジョニングをサポートしている。
-インストール直後から、シェルスクリプト、Chef、Puppet によるプロビジョニングをサポートしています。
+インストール直後から、シェルスクリプト、Chef、Puppet によるプロビジョニングをサポート
+しています。
 
 
-Apache をセットアップして、性的なファイルを Vagrant の共有フォルダから配信できるようにします。
+Apache をセットアップして、性的なファイルを Vagrant の共有フォルダから配信できるよう
+にします。
 Apache が自動的に起動され、共有フォルダのファイルを提供してくれるように設定します。
-この基本的な例における開発者は、ゲストマシンにSSHする必要すらなく、完全にホストの環境内だけで作業できるようになります。
+この基本的な例における開発者は、ゲストマシンにSSHする必要すらなく、完全にホストの環境
+内だけで作業できるようになります。
 
 
 ## 3.1 自動プロビジョニングを行う理由
@@ -153,3 +157,139 @@ $ vagrant up
 
 
 ### 3.4.2 Chef
+
+Vagrantfile に Chef のプロビジョナを設定する
+
+```ruby
+config.vm.provision 'chef_solo', run_list: ['vagrant_book']
+```
+
+Vagrant のデフォルトで見に行くクックブックは、プロジェクトのディレクトリに対する
+相対パスの `./cookbooks` ディレクトリである
+
+```ruby
+Vagrant::Config.run do |config|
+  config.vm.box = 'precise64'
+  config.vm.forward_port 80, 8080
+  config.vm.provision 'chef_solo', run_list: ['vagrant_book']
+end
+```
+
+実際のクックブックとレシピを作成してみましょう。
+
+```ruby
+# default.rb
+execute 'apt-get update'
+package 'apache2'
+execute 'rm -rf /var/www'
+link '/var/www' do
+  to '/vagrant'
+end
+```
+
+プロジェクトディレクトリのレイアウト。
+
+```txt
+$ tree
+.
+├── Vagrantfile
+└── cookbooks
+    └──vagrant_book
+        └── recipes
+             └── default.rb
+
+3 directries, 2 files
+```
+
+```sh
+$ vagrant destroy
+$ vagrant up
+```
+
+
+### 3.4.3 Puppet
+
+Vagrantfile に Puppet のプロビジョナを設定する
+
+```sh
+config.vm.provision 'puppet'
+```
+
+```
+# manifests/default.pp
+exec { 'apt-get update':
+  command => '/usr/bin/apt-get update',
+}
+package { 'apache2'
+  require => Exec['apt-get update'],
+}
+
+file { '/var/www':
+  ensure => link,
+  target => '/vagrant',
+  force => true,
+}
+```
+
+プロジェクトディレクトリ。
+
+```txt
+$ tree
+.
+├── Vagrantfile
+└── manifests
+    └── default.pp
+
+1 directries, 2 files
+```
+
+```sh
+$ vagrant up
+```
+
+
+## 3.5 複数のプロビジョナ
+
+プロビジョナは、1つしか使えないわけではありません。複数の `config.vm.provision`
+ディレクティブを Vagrantfile で指定すれば、指定された順序でプロビジョニングします。
+
+```ruby
+Vagrant::Config.run do |config|
+  config.vm.box = 'precise64'
+
+  config.vm.provision 'shell', install: 'apt-get update'
+  config.vm.provision 'puppet'
+  # ... and so on
+end
+```
+
+マシンのブートストラップ時にはシェルスクリプトを利用し、Chefのクックブックをテストする
+のに Chef のプロビジョナを使い、リロードの時にだけその Chef のプロビジョナを実行したい、
+といった場合に便利です。`up` と `reload` のどちらでも以下のような指定できます
+
+```ruby
+$ vagrant up --provision-with=chef
+```
+
+もちろん、この場合のパラメータには、使っているプロビジョナの名前をどれでも使うことがで
+きます。
+
+
+## 3.6 「プロビジョニングしない」モード
+
+```sh
+$ vagrant up --no-provision
+```
+
+
+### 3.7 詳細なプロビジョナの利用方法
+
+自動化プロビジョナの基本的な使い方を見たので、今度はそれぞれのプロビジョナをどのように
+設定し、チューニングすれば、やりたいことをぴったりこなしてくれるのか、その複雑な詳細に
+入っていきましょう。
+
+
+### 3.7.1 シェルスクリプト
+
+シェルスクリプトのユニークさは、非常にシンプルなものから、信じられないほど複雑なものに
+まで及ぶ、その柔軟性にあります。
