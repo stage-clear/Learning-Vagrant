@@ -293,3 +293,91 @@ $ vagrant up --no-provision
 
 シェルスクリプトのユニークさは、非常にシンプルなものから、信じられないほど複雑なものに
 まで及ぶ、その柔軟性にあります。
+
+
+#### インラインスクリプト
+
+やりたいことが非常に単純なことである場合、わざわざ別のファイルを用意することもないよう
+に思えることもあるでしょう。そいういった場合には、インラインスクリプトを指定することが
+できます。
+
+```ruby
+config.vm.provision 'shell', inline: 'apt-get install -y apache'
+```
+
+
+#### 一度限りのスクリプト
+
+形式的設定管理システムの素晴らしい特徴の一つは、それらが冪等であることです。
+すなわち、同じ処理を何度実行しても、結果は同じになるのです。一方、シェルスクリプトは、
+意識的にそうなるように書かない限り、冪等ではありません。そして、通常は冪等にするのは、
+複雑なことなのです。
+
+```sh
+if [ -f '/var/vagrant_provision' ]; then
+  exit 0
+fi
+
+# シェルコマンドをここに書く
+touch /var/vagrant_provision
+```
+
+これは、シェルスクリプトが一度しか実行されないようにするためのシンプルな解決方であり、
+Vagrant のコミュニティではよく使われているパターンです。
+
+
+### 3.7.2 Chef Server
+
+認証が必要な場合は、オプションで追加できます。
+
+```ruby
+config.vm.provision 'chef_client',
+  chef_server_url: 'http://mychefserver.com:4000/',
+  validation_key_path: 'validation.pem'
+```
+
+
+__validation_client_name__
+
+Opscode が提供しているホステッド Chef Server プラットフォームを使う場合には、このオプ
+ションが必要になることがあります。
+
+__client_key_path__
+
+既存のクライアントキーを使ってノードを登録したい場合には、このオプションを使ってくださ
+い。
+
+
+### 3.7.3 Puppet
+
+#### モジュール群
+
+- [モジュール群](http://docs.puppetlabs.com/puppet/3/reference/modules_fundamentals.html)
+
+```ruby
+config.vm.provision 'puppet',
+  module_path: 'modules'
+```
+
+### Hiera のデータ
+
+- [Hiera](http://docs.puppetlabs.com/hiera/latest)
+
+```ruby
+config.vm.provision 'puppet',
+  hiera_config_path: 'hiera.yaml',
+  working_directory: '/vagrant'
+```
+
+### カスタムファクト
+
+```ruby
+config.vm.provision 'puppet' do |p|
+  p.facter['vagrant'] = 'yes'
+end
+```
+
+
+* * * * * *
+
+===== ここ以降は必要なさそうなので、いったん離脱 =====-
