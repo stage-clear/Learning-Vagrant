@@ -27,6 +27,7 @@ __コマンド一覧__
 __ボックスコマンド__
 
 |Command|Summary|format|
+|:--|:--|:--|
 |`vagrant box add`|ボックスの追加|`vagrant box add [BOX_NEW_NAME] BOX_URL`|
 |`vagrant box list`|ボックス一覧||
 |`vagrant box remove`|ボックスの削除|`vagrant box remove BOX_NAME`|
