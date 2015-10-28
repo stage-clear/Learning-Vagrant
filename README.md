@@ -7,7 +7,7 @@
 
 ## コマンド
 
-コマンド一覧。
+__コマンド一覧__
 
 * 大文字はパラメータ
 * `[]` はオプション
@@ -23,11 +23,16 @@
 |`vagrant halt`|停止||
 |`vagrant destroy`|破棄||
 |`vagrant status`|現在の状態を表示||
+
+__ボックスコマンド__
+
+|Command|Summary|format|
 |`vagrant box add`|ボックスの追加|`vagrant box add [BOX_NEW_NAME] BOX_URL`|
 |`vagrant box list`|ボックス一覧||
 |`vagrant box remove`|ボックスの削除|`vagrant box remove BOX_NAME`|
 |`vagrant box package`|ボックスのパッケージ化||
 |`vagrant box repackage`|add 済みのボックスの再パッケージ化||
+
 
 ## リンク
 
