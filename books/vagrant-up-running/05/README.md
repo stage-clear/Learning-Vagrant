@@ -103,3 +103,81 @@ Vagrant::Config.run do |config|
   end
 end
 ```
+
+__ping で確認__
+
+```
+# ping to web
+$ ping 192.168.33.10
+64 bytes from 192.168.33.10: icmp_seq=0 ttl=64 time=0.497 ms
+
+# ping to db
+$ ping 192.168.33.11
+64 bytes from 192.168.33.11: icmp_seq=0 ttl=64 time=0.477 ms
+
+# web から db に ping
+$ vagrant ssh web
+vagrant@precise64:~$ ping 192.168.33.11
+64 bytes from 192.168.33.11: icmp_req=1 ttl=64 time=0.573 ms
+```
+
+### 5.3.2 ブリッジされたネットワーク
+
+- `bridged` なネットワークでも複数のマシン間の通信が可能です
+- 厳密には、それらのマシンはすべて同じデバイスで `bridged` されなければいけません
+- DHCP で割り振られたIPを手動で確認した上で、それらを使って通信する
+
+これは理想的な方法とは言えず、複数マシンの環境下でマシン群を通信するための方法としは、
+`hostonly` のネットワークを使う方がいいでしょう
+
+
+## 5.4 実際的な例: MySQL
+
+```sh
+export DEBIAN_FRONTEND=noninteractive
+apt-get update
+apt-get install -y mysql-server
+sed -i -e 's/127.0.0.0/0.0.0.0/' /etc/mysql/my.cnf
+restart mysql
+mysql -uroot mysql <<< "GRANT ALL ON *.* TO 'root'@'; FLUSH PRIVILEGES;"
+```
+
+- 環境変数 `DEBIAN_FRONTEND` を `noninteractive` という値にしてエクスポートする
+  こうすることで、MySQLサーバーをインストールする際に、ルートのパスワードを尋ねられる
+  ことなくインストールが終了する
+- `sed` : バインドするアドレスをループバックからすべてのインターフェースを意味する
+  `0.0.0.0` に変更する。これは、リモートマシンがこのサーバーに接続できるようにするた
+  めに必要です
+- `restart mysql` : MySQL を再起動します
+- MySQL に対してルートで任意のホストかrの接続を許可（これはとても安全とは言えない）
+
+```ruby
+Vagrant::Config.run do |config|
+  config.vm.box = 'precise64'
+
+  config.vm.define 'web' do |web|
+    web.vm.forward_port 80, 8080
+    web.vm.provision :shell, path: 'provision.sh'
+    web.vm.provision :shell, inline: 'apt-get install -y mysql-client'
+    web.vm.network :hostonly, '192.168.33.10'
+  end
+
+  config.vm.define 'db' do |db|
+    db.vm.provision :shell, path: 'db_provision.sh'
+    db.vm.network :hostonly, '192.168.33.11'
+  end
+end
+```
+
+```sh
+$ vagrant destroy
+$ vagrant up
+```
+
+マシン群が動き始めたら、web マシンにSSHログインして、MySQLのクライアントを使って、db
+マシンにアクセスしてください
+
+```sh
+$ vagrant ssh web
+vagrant@precise64:~$ mysql -uroot -h192.168.33.11
+```
