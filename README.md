@@ -32,7 +32,7 @@ __ボックスコマンド__
 |`vagrant box list`|ボックス一覧||
 |`vagrant box remove`|ボックスの削除|`vagrant box remove BOX_NAME`|
 |`vagrant box package`|ボックスのパッケージ化||
-|`vagrant box repackage`|add 済みのボックスの再パッケージ化||
+|`vagrant box repackage`|`box add` 済みのボックスの再パッケージ化||
 
 
 ## リンク
