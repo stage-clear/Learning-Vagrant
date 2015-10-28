@@ -12,12 +12,12 @@
 
 __付録__
 
-- A. Vagrant の環境変数
-- B. Vagrant の設定リファレンス
-- C. トラブルシューティングとデバッグ
-- D. Vagrant プラグイン
-- E. Packer
-- F. Vagrant と Amazon EC2
+A. Vagrant の環境変数  
+B. Vagrant の設定リファレンス  
+C. トラブルシューティングとデバッグ  
+D. Vagrant プラグイン  
+E. Packer  
+F. Vagrant と Amazon EC2  
 
 
 ## リンク
