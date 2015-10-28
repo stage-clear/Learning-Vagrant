@@ -9,12 +9,15 @@
 5. [複数マシン構成のクラスタのモデリング](05/README.md)
 6. [ボックス](06/README.md)
 7. [プラグインによる Vagrant の拡張](07/README.md)
-- A) Vagrant の環境変数
-- B) Vagrant の設定リファレンス
-- C) トラブルシューティングとデバッグ
-- D) Vagrant プラグイン
-- E) Packer
-- F) Vagrant と Amazon EC2
+
+__付録__
+
+- A. Vagrant の環境変数
+- B. Vagrant の設定リファレンス
+- C. トラブルシューティングとデバッグ
+- D. Vagrant プラグイン
+- E. Packer
+- F. Vagrant と Amazon EC2
 
 
 ## リンク
