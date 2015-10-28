@@ -2,7 +2,7 @@
 
 ## 目次
 
-1. [Vagrant の紹介](01/README.ms)
+1. [Vagrant の紹介](01/README.md)
 2. [初めての Vagrant マシン](02/README.md)
 3. [Vagrant 仮想マシンのプロビジョニング](03/README.md)
 4. [Vagrant におけるネットワーク](04/README.md)
