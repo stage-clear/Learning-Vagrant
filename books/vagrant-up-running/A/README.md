@@ -25,11 +25,8 @@ VAGRANT_CWD=/bar vagrant up
 
 この環境変数の一般的なユースケースは2つあります。
 
-1. 高速化のためにSSDをメインで使っている場合、速度が問題にならないような用途では、低速
-   で大容量のディスクも使っているような場合に `VAGRANT_HOME` を大きい方に向ける
-2. テストやスクリプティング用にVagrant をインストールする場合
-   Vagrant のホームとプロジェクトの `.vagrant` を合わせれば、Vagrant はクリーンにイ
-   ンストールされた状態になります
+1. 高速化のためにSSDをメインで使っている場合、速度が問題にならないような用途では、低速で大容量のディスクも使っているような場合に `VAGRANT_HOME` を大きい方に向ける
+2. テストやスクリプティング用にVagrant をインストールする場合、Vagrant のホームとプロジェクトの `.vagrant` を合わせれば、Vagrant はクリーンにインストールされた状態になります
 
 
 ## A.3 VAGRANT_LOG
@@ -40,8 +37,7 @@ VAGRANT_CWD=/bar vagrant up
 
 ## A.4 VAGRANT_NO_PLUGINS
 
-- `VAGRANT_NO_PLUGINS` に何らかの値を設定すると、Vagrant は一切プラグインをロードし
-  なくなります
+- `VAGRANT_NO_PLUGINS` に何らかの値を設定すると、Vagrant は一切プラグインをロードしなくなります
 
 
 ## A.5 VAGRANT_VAGRANTFILE
