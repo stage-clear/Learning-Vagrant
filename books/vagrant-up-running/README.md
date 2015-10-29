@@ -13,11 +13,11 @@
 __付録__
 
 - A. [Vagrant の環境変数](A/README.md)
-- B. Vagrant の設定リファレンス  
-- C. トラブルシューティングとデバッグ  
-- D. Vagrant プラグイン  
-- E. Packer  
-- F. Vagrant と Amazon EC2  
+- B. [Vagrant の設定リファレンス](B/README.md)
+- C. トラブルシューティングとデバッグ
+- D. Vagrant プラグイン
+- E. Packer
+- F. Vagrant と Amazon EC2
 
 
 ## リンク
