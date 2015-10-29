@@ -23,3 +23,4 @@ __付録__
 ## リンク
 
 - [O'Reilly Japan - 実践 Vagrant](http://www.oreilly.co.jp/books/9784873116655/)
+- [実践 Vagrant | Amazon](http://www.amazon.co.jp/dp/4873116651)
